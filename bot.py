@@ -147,6 +147,13 @@ def main():
     if not config.API_KEY or not config.API_SECRET:
         raise SystemExit("BYBIT_API_KEY / BYBIT_API_SECRET belum diset di .env")
 
+    # --- DEBUG sementara: cek env var ke-baca dengan benar (hapus setelah masalah selesai) ---
+    key, secret = config.API_KEY, config.API_SECRET
+    print(f"[debug] API_KEY length={len(key)} preview={key[:4]}...{key[-4:] if len(key)>=4 else ''}")
+    print(f"[debug] API_SECRET length={len(secret)} preview={secret[:4]}...{secret[-4:] if len(secret)>=4 else ''}")
+    print(f"[debug] has_leading/trailing_whitespace key={key != key.strip()} secret={secret != secret.strip()}")
+    # ------------------------------------------------------------------------------------------
+
     session = HTTP(testnet=config.TESTNET, api_key=config.API_KEY, api_secret=config.API_SECRET)
     risk = RiskManager()
 
