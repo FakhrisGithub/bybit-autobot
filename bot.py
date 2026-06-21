@@ -147,28 +147,6 @@ def main():
     if not config.API_KEY or not config.API_SECRET:
         raise SystemExit("BYBIT_API_KEY / BYBIT_API_SECRET belum diset di .env")
 
-    # --- DEBUG sementara: lihat response mentah server demo saat 401 ---
-    import time as _time, hmac as _hmac, hashlib as _hashlib, urllib.request as _ur, urllib.error as _ue, json as _json
-    key, secret = config.API_KEY, config.API_SECRET
-    try:
-        _ts = str(int(_time.time() * 1000))
-        _recv = "5000"
-        _query = "accountType=UNIFIED&coin=USDT"
-        _sign_str = _ts + key + _recv + _query
-        _sign = _hmac.new(secret.encode(), _sign_str.encode(), _hashlib.sha256).hexdigest()
-        _url = f"https://api-demo.bybit.com/v5/account/wallet-balance?{_query}"
-        _req = _ur.Request(_url, headers={
-            "X-BAPI-API-KEY": key, "X-BAPI-SIGN": _sign,
-            "X-BAPI-TIMESTAMP": _ts, "X-BAPI-RECV-WINDOW": _recv,
-        })
-        with _ur.urlopen(_req, timeout=10) as r:
-            print(f"[debug] RAW demo test OK status={r.status} body={r.read().decode()}")
-    except _ue.HTTPError as e:
-        print(f"[debug] RAW demo test HTTPError status={e.code} headers={dict(e.headers)} body={e.read().decode()}")
-    except Exception as e:
-        print(f"[debug] RAW demo test exception: {type(e).__name__}: {e}")
-    # ---------------------------------------------------------------------
-
     session = HTTP(
         testnet=config.TESTNET,
         demo=config.DEMO,
